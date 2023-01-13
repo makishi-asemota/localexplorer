@@ -13,6 +13,7 @@ import { UserInterface } from "./interfaces/Userinterface";
 
 const LocalStrategy = passportLocal.Strategy;
 
+const DB = process.env.DATABASE_URL;
 mongoose
   .connect(
     "mongodb+srv://masemota:bestbatman10@userprofiles.tv5tgoq.mongodb.net/?retryWrites=true&w=majority",
@@ -47,6 +48,7 @@ passport.use(new LocalStrategy((username, password, done) => {
   User.findOne({ username: username }, (err: any, user: any) => {
     if (err) throw err;
     if (!user) return done(null, false);
+    // compare username/password to stored in database
     bcrypt.compare(password, user.password, (err, result) => {
       if (err) throw err;
       if (result === true) {
@@ -56,9 +58,12 @@ passport.use(new LocalStrategy((username, password, done) => {
       }
 });
 
-passport.deserializeUser((user: any, cb) => {
+// store cookie in browser session
+passport.serializeUser((user: any, cb) => {
   cb(null, user.id);
 });
+
+// return user that matches cookie id
 passport.deserializeUser((id: string, cb) => {
   User.findOne({id: id}, (err: any, user: any) => {
     const userInformation = {
@@ -70,7 +75,6 @@ passport.deserializeUser((id: string, cb) => {
 
 
 // Routes
-
 app.post("/register", async (req: Request, res: Response) => {
   const { username, password } = req?.body;
   if (
@@ -86,6 +90,7 @@ app.post("/register", async (req: Request, res: Response) => {
     if (err) throw err;
     if (doc) res.send("User already exists");
     if (!doc) {
+      // secure user password
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
       const newUser = new user({
@@ -97,6 +102,15 @@ app.post("/register", async (req: Request, res: Response) => {
     }
   });
 });
+
+// authenticate user
+app.post("/login", passport.authenticate("local", (req, res) => {
+  res.send("Authentication successful");
+})) 
+
+app.get("/user", (req, res) => {
+  res.send(req.user);
+})
 
 const port = process.env.PORT || 8000;
 
