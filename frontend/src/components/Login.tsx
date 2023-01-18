@@ -13,41 +13,36 @@ export default function Login() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  async function handleSubmit(e: any) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-        const {data} = await axios.post<UserRegistration>(
-            "http//localhost:8080/register",
-            {username: username, password: password},
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                },
-            }
-        )
-        return data
-    } catch (error) {
-        if (axios.isAxiosError(error)) {
-            console.log('error message: ', error.message);
-            return error.message;
-          } else {
-            console.log('unexpected error: ', error);
-            return 'An unexpected error occurred';
-          }
+    axios
+      .post(
+        "http://localhost:8000/register",
+        {
+          username,
+          password,
+        },
+        {
+          withCredentials: true,
         }
-    }
+      )
+      .then((res) => {
+        if (res.data === "success") {
+          window.location.href = "/";
+        }
+      });
   };
 
   return (
-    <Container className="d-flex align-items-center">
-      <h1>Register</h1>
-      <Form onSubmit={handleSubmit()}>
+    <Container className="d-flex flex-column">
+      <h1 className="text-center fw-bold my-6">Register</h1>
+      <br></br>
+      <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
+          <Form.Label>Username</Form.Label>
           <Form.Control
-            type="email"
-            placeholder="Enter email"
+            type="text"
+            placeholder="Enter Username"
             onChange={(e) => setUsername(e.target.value)}
           />
           <Form.Text className="text-muted">
@@ -58,7 +53,7 @@ export default function Login() {
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
           <Form.Control
-            type="password"
+            type="text"
             placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -68,7 +63,7 @@ export default function Login() {
           </Form.Text>
         </Form.Group>
         <Button variant="primary" type="submit">
-          Submit
+          Sign up
         </Button>
       </Form>
     </Container>

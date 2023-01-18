@@ -44,19 +44,23 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Passport
-passport.use(new LocalStrategy((username, password, done) => {
-  User.findOne({ username: username }, (err: any, user: any) => {
-    if (err) throw err;
-    if (!user) return done(null, false);
-    // compare username/password to stored in database
-    bcrypt.compare(password, user.password, (err, result) => {
+passport.use(
+  new LocalStrategy((username, password, done) => {
+    User.findOne({ username: username }, (err: any, user: any) => {
       if (err) throw err;
-      if (result === true) {
-        return done(null, user);
-      } else {
-        return done(null, false);
-      }
-});
+      if (!user) return done(null, false);
+      // compare username/password to stored in database
+      bcrypt.compare(password, user.password, (err, result) => {
+        if (err) throw err;
+        if (result === true) {
+          return done(null, user);
+        } else {
+          return done(null, false);
+        }
+      });
+    });
+  })
+);
 
 // store cookie in browser session
 passport.serializeUser((user: any, cb) => {
@@ -65,14 +69,13 @@ passport.serializeUser((user: any, cb) => {
 
 // return user that matches cookie id
 passport.deserializeUser((id: string, cb) => {
-  User.findOne({id: id}, (err: any, user: any) => {
+  User.findOne({ id: id }, (err: any, user: any) => {
     const userInformation = {
-      username: user.username
+      username: user.username,
     };
     cb(err, userInformation);
-    })
-})
-
+  });
+});
 
 // Routes
 app.post("/register", async (req: Request, res: Response) => {
@@ -93,7 +96,7 @@ app.post("/register", async (req: Request, res: Response) => {
       // secure user password
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-      const newUser = new user({
+      const newUser = new User({
         username,
         password: hashedPassword,
       });
@@ -104,13 +107,21 @@ app.post("/register", async (req: Request, res: Response) => {
 });
 
 // authenticate user
-app.post("/login", passport.authenticate("local", (req, res) => {
-  res.send("Authentication successful");
-})) 
+app.post(
+  "/login",
+  passport.authenticate("local", (req, res) => {
+    res.send("Authentication successful");
+  })
+);
 
 app.get("/user", (req, res) => {
   res.send(req.user);
-})
+});
+
+// app.get("/logout", (req, res) => {
+//   req.logout();
+//   res.send("logged out");
+// })
 
 const port = process.env.PORT || 8000;
 
