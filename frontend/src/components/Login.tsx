@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import React, { useState } from "react";
 import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
@@ -13,8 +13,7 @@ export default function Login() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     axios
       .post(
         "http://localhost:8000/register",
@@ -26,7 +25,7 @@ export default function Login() {
           withCredentials: true,
         }
       )
-      .then((res) => {
+      .then((res: AxiosResponse) => {
         if (res.data === "success") {
           window.location.href = "/";
         }
@@ -34,10 +33,14 @@ export default function Login() {
   };
 
   return (
-    <Container className="d-flex flex-column">
+    <Container className="d-flex flex-column px-5 ">
+      <br></br>
       <h1 className="text-center fw-bold my-6">Register</h1>
       <br></br>
-      <Form onSubmit={handleSubmit}>
+      <Form
+        onSubmit={handleSubmit}
+        className="border border-primary rounded p-3 bg-light"
+      >
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Username</Form.Label>
           <Form.Control
@@ -45,9 +48,11 @@ export default function Login() {
             placeholder="Enter Username"
             onChange={(e) => setUsername(e.target.value)}
           />
-          <Form.Text className="text-muted">
-            We'll never share your email with anyone else.
-          </Form.Text>
+          <div className="text-center">
+            <Form.Text className="text-muted">
+              We'll never share your email with anyone else.
+            </Form.Text>
+          </div>
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -57,14 +62,19 @@ export default function Login() {
             placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Form.Text id="passwordHelpBlock" muted>
-            Your password must be 8-20 characters long, contain letters and
-            numbers, and must not contain spaces, special characters, or emoji.
-          </Form.Text>
+          <div className="text-center">
+            <Form.Text id="passwordHelpBlock" muted>
+              Your password must be 10-15 characters long, contain letters and
+              numbers, and must not contain spaces or special characters.
+            </Form.Text>
+          </div>
         </Form.Group>
-        <Button variant="primary" type="submit">
-          Sign up
-        </Button>
+        <br></br>
+        <div className="d-flex justify-content-center">
+          <Button variant="primary" type="submit">
+            Sign up
+          </Button>
+        </div>
       </Form>
     </Container>
   );

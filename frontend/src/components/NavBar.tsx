@@ -10,11 +10,11 @@ export default function NavBar() {
     <Navbar bg="primary" variant="dark">
       <Container>
         <Link to={"/"} style={{ textDecoration: "none" }}>
-          <Navbar.Brand href="/">Local Explorer</Navbar.Brand>
+          <Navbar.Brand>Local Explorer</Navbar.Brand>
         </Link>
         <Nav className="justify-self-end">
           <Link to={"/login"} style={{ textDecoration: "none" }}>
-            <Nav.Link href="/Shop">Login</Nav.Link>
+            <Nav.Item className="text-light">Login</Nav.Item>
           </Link>
         </Nav>
       </Container>

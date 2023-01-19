@@ -46,7 +46,7 @@ app.use(passport.session());
 // Passport
 passport.use(
   new LocalStrategy((username, password, done) => {
-    User.findOne({ username: username }, (err: any, user: any) => {
+    User.findOne({ username: username }, (err: any, user: UserInterface) => {
       if (err) throw err;
       if (!user) return done(null, false);
       // compare username/password to stored in database
@@ -81,8 +81,8 @@ passport.deserializeUser((id: string, cb) => {
 app.post("/register", async (req: Request, res: Response) => {
   const { username, password } = req?.body;
   if (
-    username ||
-    password ||
+    !username ||
+    !password ||
     typeof username !== "string" ||
     typeof passport !== "string"
   ) {
@@ -94,7 +94,7 @@ app.post("/register", async (req: Request, res: Response) => {
     if (doc) res.send("User already exists");
     if (!doc) {
       // secure user password
-      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      const hashedPassword = await bcrypt.hash(password, 10);
 
       const newUser = new User({
         username,

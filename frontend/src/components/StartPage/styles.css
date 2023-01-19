@@ -1,0 +1,14 @@
+.home {
+  background-image: url(../img/events.jpg);
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+}
+
+.start {
+  padding-top: 25%;
+}
+
+.homeForm {
+  width: 55vw;
+}
