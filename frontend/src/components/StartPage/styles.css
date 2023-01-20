@@ -6,9 +6,13 @@
 }
 
 .start {
-  padding-top: 25%;
+  padding-top: 10%;
 }
 
 .homeForm {
-  width: 55vw;
+  width: 70vw;
+}
+
+.header {
+  padding-top: 15%;
 }

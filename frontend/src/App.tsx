@@ -7,11 +7,19 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 
 function App() {
-  const [location, setLocation] = useState<boolean>(false);
+  interface Location {
+    location: string;
+    isLocation: boolean;
+  }
+
+  const [state, setState] = useState<Location>({
+    location: "",
+    isLocation: false,
+  });
 
   return (
     <div>
-      {location ? (
+      {state.isLocation ? (
         <BrowserRouter>
           <NavBar />
           <Routes>
@@ -20,7 +28,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       ) : (
-        <FirstPage />
+        <FirstPage state={state} setState={setState} />
       )}
     </div>
   );
