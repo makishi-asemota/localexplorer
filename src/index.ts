@@ -11,8 +11,10 @@ import cors from "cors";
 import User from "./User";
 import { UserInterface } from "./interfaces/Userinterface";
 
+// create passport local strategy
 const LocalStrategy = passportLocal.Strategy;
 
+//connect to mongoose database
 const DB = process.env.DATABASE_URL;
 mongoose
   .connect(
@@ -43,7 +45,7 @@ app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Passport
+// passport use local strategy
 passport.use(
   new LocalStrategy((username, password, done) => {
     User.findOne({ username: username }, (err: any, user: UserInterface) => {
@@ -77,9 +79,10 @@ passport.deserializeUser((id: string, cb) => {
   });
 });
 
-// Routes
+// register user route
 app.post("/register", async (req: Request, res: Response) => {
   const { username, password } = req?.body;
+  // check if user has inputted correct values
   if (
     !username ||
     !password ||
@@ -89,6 +92,7 @@ app.post("/register", async (req: Request, res: Response) => {
     res.send("Improper Value");
     return;
   }
+  // check if user already exists
   User.findOne({ username }, async (err: Error, doc: UserInterface) => {
     if (err) throw err;
     if (doc) res.send("User already exists");
@@ -96,6 +100,7 @@ app.post("/register", async (req: Request, res: Response) => {
       // secure user password
       const hashedPassword = await bcrypt.hash(password, 10);
 
+      // create new user in mongodb
       const newUser = new User({
         username,
         password: hashedPassword,
@@ -106,7 +111,7 @@ app.post("/register", async (req: Request, res: Response) => {
   });
 });
 
-// authenticate user
+// authenticate user on login
 app.post(
   "/login",
   passport.authenticate("local", (req, res) => {
@@ -114,6 +119,7 @@ app.post(
   })
 );
 
+// get user route
 app.get("/user", (req, res) => {
   res.send(req.user);
 });

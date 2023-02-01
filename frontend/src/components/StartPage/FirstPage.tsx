@@ -1,9 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import "./styles.css";
 import { Form } from "react-bootstrap";
 import { Button } from "react-bootstrap";
+import Location from "../../App";
 
-export default function FirstPage() {
+interface Props {
+  location: string;
+  isLocation: boolean;
+  setState: React.Dispatch<React.SetStateAction<any>>;
+}
+
+const FirstPage: React.FC<Props> = ({ setState }) => {
+  const [city, setCity] = useState<string>("");
+
+  const onSubmit = () => {
+    setState({
+      location: city,
+      isLocation: true,
+    });
+  };
+
   return (
     <div className="home d-flex flex-column align-items-center">
       <h1 className="header fw-bold text-light">Local Explorer</h1>
@@ -19,11 +35,14 @@ export default function FirstPage() {
           <Form.Control
             style={{ width: "50%" }}
             placeholder="Enter city/state"
+            onChange={(e) => setCity(e.target.value)}
           />
 
-          <Button>Search</Button>
+          <Button onClick={onSubmit}>Search</Button>
         </div>
       </Form>
     </div>
   );
-}
+};
+
+export default FirstPage;
