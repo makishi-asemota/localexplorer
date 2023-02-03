@@ -4,10 +4,10 @@ import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
-export interface UserRegistration {
-  email: string;
-  password: string;
-}
+// export interface UserRegistration {
+//   email: string;
+//   password: string;
+// }
 
 export default function Login() {
   const [username, setUsername] = useState<string>("");

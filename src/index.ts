@@ -15,15 +15,11 @@ import { UserInterface } from "./interfaces/Userinterface";
 const LocalStrategy = passportLocal.Strategy;
 
 //connect to mongoose database
-const DB = process.env.DATABASE_URL;
 mongoose
-  .connect(
-    "mongodb+srv://masemota:bestbatman10@userprofiles.tv5tgoq.mongodb.net/?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    } as ConnectOptions
-  )
+  .connect(`${process.env.DATABASE_URL}`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  } as ConnectOptions)
   .then((res) => {
     console.log("Connected to MongoDB");
   });
@@ -87,7 +83,7 @@ app.post("/register", async (req: Request, res: Response) => {
     !username ||
     !password ||
     typeof username !== "string" ||
-    typeof passport !== "string"
+    typeof password !== "string"
   ) {
     res.send("Improper Value");
     return;
