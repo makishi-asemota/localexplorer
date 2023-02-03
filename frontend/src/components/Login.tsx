@@ -13,7 +13,8 @@ export default function Login() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     axios
       .post(
         "http://localhost:8000/register",
@@ -21,7 +22,9 @@ export default function Login() {
           username,
           password,
         },
+
         {
+          headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       )
@@ -46,6 +49,7 @@ export default function Login() {
           <Form.Control
             type="text"
             placeholder="Enter Username"
+            name="username"
             onChange={(e) => setUsername(e.target.value)}
           />
           <div className="text-center">
@@ -60,6 +64,7 @@ export default function Login() {
           <Form.Control
             type="text"
             placeholder="Password"
+            name="password"
             onChange={(e) => setPassword(e.target.value)}
           />
           <div className="text-center">

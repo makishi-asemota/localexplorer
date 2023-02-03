@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import "./styles.css";
 import { Form } from "react-bootstrap";
 import { Button } from "react-bootstrap";
-import Location from "../../App";
 
+// create interface for props passed from App component
 interface Props {
   location: string;
   isLocation: boolean;
@@ -13,6 +13,7 @@ interface Props {
 const FirstPage: React.FC<Props> = ({ setState }) => {
   const [city, setCity] = useState<string>("");
 
+  // set entered city
   const onSubmit = () => {
     setState({
       location: city,
